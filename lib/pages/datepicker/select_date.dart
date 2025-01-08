@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iterasi1/model/activity.dart';
+import 'package:iterasi1/pages/add_activities/form_suggestion.dart';
 import 'package:iterasi1/pages/add_days/add_days.dart';
 import 'package:iterasi1/provider/database_provider.dart';
 import 'package:iterasi1/resource/custom_colors.dart';
@@ -201,7 +203,13 @@ class _SelectDateState extends State<SelectDate> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const AddDays(),
+                                builder: (context) => FormSuggestion(
+                                  onSubmit: (Activity newActivity) {
+                                    // Implementasikan logika setelah aktivitas disubmit
+                                    print(
+                                        'Aktivitas Baru: ${newActivity.activityName}');
+                                  },
+                                ),
                               ),
                             );
                           } else {
