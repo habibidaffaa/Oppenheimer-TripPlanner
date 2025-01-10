@@ -203,7 +203,7 @@ class _SelectDateState extends State<SelectDate> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const FormSuggestion(
+                                builder: (context) =>  FormSuggestion(selectedDays: selectedDates,
                                   // onSubmit: (Activity newActivity) {
                                   //   // Implementasikan logika setelah aktivitas disubmit
                                   //   print(

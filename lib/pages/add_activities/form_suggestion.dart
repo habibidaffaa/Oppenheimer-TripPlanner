@@ -1,9 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:iterasi1/pages/add_activities/suggestion_Itinerary.dart';
+import 'package:iterasi1/model/itinerary.dart';
+import 'package:iterasi1/pages/add_activities/suggestion_itinerary.dart';
+import 'package:iterasi1/provider/itinerary_provider.dart';
 import 'package:iterasi1/resource/custom_colors.dart';
+import 'package:provider/provider.dart';
 
 class FormSuggestion extends StatefulWidget {
-  const FormSuggestion({super.key});
+  final List<DateTime> selectedDays;
+
+  const FormSuggestion({super.key, required this.selectedDays});
 
   @override
   FormSuggestionState createState() => FormSuggestionState();
@@ -12,9 +19,9 @@ class FormSuggestion extends StatefulWidget {
 class FormSuggestionState extends State<FormSuggestion> {
   // Daftar lokasi statis untuk dropdown
   final List<String> _locations = [
-    "PENS",
-    "Politeknik Elektronika Negeri Surabaya",
-    "Pascasarjana Terapan Politeknik Elektronika Negeri Surabaya",
+    "Surabaya",
+    "Mojokerto",
+    "Malang",
   ];
 
   String? _selectedDepartureLocation; // Lokasi Berangkat terpilih
@@ -26,14 +33,19 @@ class FormSuggestionState extends State<FormSuggestion> {
       backgroundColor: CustomColor.surface,
       appBar: AppBar(
         backgroundColor: CustomColor.surface,
-        title: const Text(
-          "Form Rekomendasi",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontFamily: 'poppins_bold',
-            fontSize: 30,
-            color: CustomColor.buttonColor,
-          ),
+        title: Column(
+          children: [
+            const Text(
+              "Form Rekomendasi",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'poppins_bold',
+                fontSize: 30,
+                color: CustomColor.buttonColor,
+              ),
+            ),
+            Text(widget.selectedDays.toString()),
+          ],
         ),
       ),
       body: Container(
@@ -166,11 +178,18 @@ class FormSuggestionState extends State<FormSuggestion> {
                     ),
                     onPressed: (_selectedDepartureLocation != null &&
                             _selectedDestinationLocation != null)
-                        ? () {
+                        ? () async {
+                            log('message');
+                            List<Itinerary> result = await context
+                                .read<ItineraryProvider>()
+                                .parseCsvToItinerary(
+                                    _selectedDepartureLocation!,
+                                    _selectedDestinationLocation!,
+                                    widget.selectedDays.length);
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const SuggestionItinerary(),
+                                    SuggestionItinerary(itineraries: result),
                               ),
                             );
                           }

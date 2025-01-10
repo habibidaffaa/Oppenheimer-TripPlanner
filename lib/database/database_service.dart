@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:developer' as developer;
 import '../model/itinerary.dart';
+import 'package:flutter/services.dart';
 
 class DatabaseService {
   static const _dbName = 'itinerary_db';
@@ -99,5 +100,16 @@ class DatabaseService {
     final db = await database;
 
     await db.delete(_itinerariesTableName, where: "id = ?", whereArgs: [id]);
+  }
+
+  Future<List<Map<String, String>>> parseCsvData() async {
+    final csvData = await rootBundle.loadString('assets/Dataset.csv');
+    final lines = LineSplitter.split(csvData).toList();
+    final headers = lines.first.split(',');
+
+    return lines.skip(1).map((line) {
+      final values = line.split(',');
+      return Map.fromIterables(headers, values);
+    }).toList();
   }
 }
